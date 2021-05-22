@@ -2,7 +2,7 @@ import {Component} from './component';
 import {globalRouter} from 'utils/router';
 import {PATHS} from 'utils/paths';
 import {API} from 'utils/api';
-import {OK_CODE} from 'utils/codes';
+import {ENTER_KEYCODE, OK_CODE} from 'utils/codes';
 import {userMeta} from 'utils/userMeta';
 import 'partials/navbar.tmpl';
 
@@ -20,6 +20,7 @@ export class Navbar extends Component {
         // eslint-disable-next-line no-undef
         this.renderHBS = Handlebars.templates['navbar.hbs'];
         this.searchClickedCallback = this.searchClicked.bind(this);
+        this.enterPressedCallback = this.enterPressed.bind(this);
         this.logoutClickedCallback = this.logoutClicked.bind(this);
     }
 
@@ -35,6 +36,7 @@ export class Navbar extends Component {
      * Установить листенеры компоненту
      */
     setEventListeners() {
+        document.getElementById('search-input').addEventListener('keyup', this.enterPressedCallback);
         document.getElementById('search-button').addEventListener('click', this.searchClickedCallback);
         document.getElementById('logout-button')?.addEventListener('click', this.logoutClickedCallback);
     }
@@ -53,6 +55,16 @@ export class Navbar extends Component {
     searchClicked() {
         const searchQuery = document.getElementById('search-input').value;
         globalRouter.activate(`${PATHS.search}?q=${searchQuery}`);
+    }
+
+    /**
+     * Обработка нажатия Enter в поисковой строке
+     * @param {Object} event - объект события
+     */
+    enterPressed(event) {
+        if (event.keyCode === ENTER_KEYCODE) {
+            this.searchClickedCallback();
+        }
     }
 
     /**

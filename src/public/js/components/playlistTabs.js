@@ -1,7 +1,7 @@
 import {Component} from './component';
 import 'partials/playlistTabs.tmpl';
 import 'partials/playlistTab.tmpl';
-import {CREATED, OK_CODE} from 'utils/codes';
+import {CREATED, ENTER_KEYCODE, OK_CODE} from 'utils/codes';
 import {API} from 'utils/api';
 
 /**
@@ -21,6 +21,7 @@ export class PlaylistTabs extends Component {
         this.renderNewTabHBS = Handlebars.templates['playlistTab.hbs'];
         this.createPlaylistClickedCallback = this.createPlaylistClicked.bind(this);
         this.createPlaylistCallback = this.createPlaylist.bind(this);
+        this.enterPressedCallback = this.enterPressed.bind(this);
         this.removeCreationCallback = this.removeCreationForm.bind(this);
         this.deleteMovieClickedCallback = this.deleteMovieClicked.bind(this);
     }
@@ -65,6 +66,8 @@ export class PlaylistTabs extends Component {
             .classList.remove('create-playlist-container_hidden');
         document.getElementById('submit-create-playlist')
             .addEventListener('click', this.createPlaylistCallback);
+        document.getElementById('input-create-playlist')
+            .addEventListener('keyup', this.enterPressedCallback);
         document.getElementById('cancel-create-playlist')
             .addEventListener('click', this.removeCreationCallback);
     }
@@ -77,6 +80,8 @@ export class PlaylistTabs extends Component {
             .classList.add('create-playlist-container_hidden');
         document.getElementById('submit-create-playlist')
             .removeEventListener('click', this.createPlaylistCallback);
+        document.getElementById('input-create-playlist')
+            .removeEventListener('keyup', this.enterPressedCallback);
         document.getElementById('cancel-create-playlist')
             .removeEventListener('click', this.removeCreationCallback);
     }
@@ -129,5 +134,15 @@ export class PlaylistTabs extends Component {
      */
     processDeletion(status, row) {
         row.remove();
+    }
+
+    /**
+     * Обработка нажатия Enter в строке создания плейлиста
+     * @param {Object} event - объект события
+     */
+    enterPressed(event) {
+        if (event.keyCode === ENTER_KEYCODE) {
+            this.createPlaylistCallback();
+        }
     }
 }

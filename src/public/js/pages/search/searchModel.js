@@ -1,5 +1,6 @@
 import {globalEventBus} from 'utils/eventbus';
 import {busEvents} from 'utils/busEvents';
+import {API} from 'utils/api';
 
 /**
  * Модель страницы поиска
@@ -17,9 +18,10 @@ export default class SearchModel {
      * @param {string} query - строка поиска
      */
     getSearchResults(query) {
-        // TODO: api call
-        globalEventBus.emit(busEvents.SET_SEARCH_RESULTS, {
-            query: query,
-        });
+        API.getSearchResults(query)
+            .then((res) => globalEventBus.emit(busEvents.SET_SEARCH_RESULTS, {
+                query: query,
+                search_results: (Object.values(res.data).every((el) => el === null)) ? [] : res.data,
+            }));
     }
 }

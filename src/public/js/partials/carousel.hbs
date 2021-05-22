@@ -1,7 +1,7 @@
 <div class="main__slider">
     {{#if (eq itemsType 'movies')}}
         {{#each items}}
-            <div class="slider__card">
+            <div class="slider__card slider__card_tooltip" data-tooltip="{{title}}">
                 <a href="/movie/{{this.id}}"><img src="{{this.poster}}"></a>
             </div>
         {{/each}}

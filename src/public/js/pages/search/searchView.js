@@ -46,6 +46,9 @@ export default class SearchView extends BaseView {
             {'authorized': userMeta.getAuthorized()});
         this.navbarComponent.render();
 
+        // сохраняем поисковой запрос
+        document.getElementById('search-input').value = decodeURI(data.query);
+
         this.setEventListeners();
     }
 

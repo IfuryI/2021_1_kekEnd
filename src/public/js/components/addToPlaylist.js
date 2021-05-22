@@ -2,7 +2,7 @@ import {Component} from './component';
 import '../partials/addToPlaylistWidget.tmpl';
 import '../partials/playlistRow.tmpl';
 import {API} from 'utils/api';
-import {CREATED} from 'utils/codes';
+import {CREATED, ENTER_KEYCODE} from 'utils/codes';
 
 /**
  * Компонент "Добавить в плейлист"
@@ -21,6 +21,7 @@ export class AddToPlaylistWidget extends Component {
         this.renderPlaylistRowHBS = Handlebars.templates['playlistRow.hbs'];
         this.createPlaylistClickedCallback = this.createPlaylistClicked.bind(this);
         this.createPlaylistCallback = this.createPlaylist.bind(this);
+        this.enterPressedCallback = this.enterPressed.bind(this);
         this.removeCreationCallback = this.removeCreationForm.bind(this);
         this.checkboxClickedCallback = this.checkboxClicked.bind(this);
     }
@@ -65,6 +66,8 @@ export class AddToPlaylistWidget extends Component {
             .classList.remove('create-playlist-container_hidden');
         document.getElementById('submit-create-playlist')
             .addEventListener('click', this.createPlaylistCallback);
+        document.getElementById('input-create-playlist')
+            .addEventListener('keyup', this.enterPressedCallback);
         document.getElementById('cancel-create-playlist')
             .addEventListener('click', this.removeCreationCallback);
     }
@@ -77,16 +80,17 @@ export class AddToPlaylistWidget extends Component {
             .classList.add('create-playlist-container_hidden');
         document.getElementById('submit-create-playlist')
             .removeEventListener('click', this.createPlaylistCallback);
+        document.getElementById('input-create-playlist')
+            .removeEventListener('keyup', this.enterPressedCallback);
         document.getElementById('cancel-create-playlist')
             .removeEventListener('click', this.removeCreationCallback);
     }
 
     /**
      * Отобразить созданный плейлист в списке
-     * @param {Object} event - событие нажатия
      */
-    createPlaylist(event) {
-        const playlistName = event.target.parentElement.previousElementSibling.value;
+    createPlaylist() {
+        const playlistName = document.getElementById('input-create-playlist').value;
         API.createPlaylist(playlistName).then((res) => this.processCreate(res.status === CREATED, playlistName));
     }
 
@@ -124,6 +128,16 @@ export class AddToPlaylistWidget extends Component {
             API.addMovieToPlaylist(playlistId, movieId).then(() => {});
         } else {
             API.deleteMovieFromPlaylist(playlistId, movieId).then(() => {});
+        }
+    }
+
+    /**
+     * Обработка нажатия Enter в строке создания плейлиста
+     * @param {Object} event - объект события
+     */
+    enterPressed(event) {
+        if (event.keyCode === ENTER_KEYCODE) {
+            this.createPlaylistCallback();
         }
     }
 }

@@ -79,6 +79,30 @@
   &:last-child {
     margin-right: auto;
   }
+
+  &_tooltip {
+    position: relative;
+
+    &::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      width: calc(150px - 1em);
+      left: 0;
+      top: 0;
+      background: $accent-color;
+      color: $white-color;
+      padding: 0.5em;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: 1s;
+      transition-delay: 0.2s;
+    }
+
+    &:hover::after {
+      opacity: 1;
+      top: 2em;
+    }
+  }
 }
 
 .view-all {

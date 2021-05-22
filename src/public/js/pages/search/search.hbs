@@ -1,6 +1,62 @@
 <div id="navbar"></div>
 
-
 <div class="main">
-    <h3 class="main__page-title">Результат по запросу <span class="main__search-query">"{{query}}"</span></h3>
+    <h3 class="main__page-title">Результаты по запросу <span class="main__search-query">"{{decodeURI query}}"</span></h3>
+
+    {{#unless search_results}}
+        <div class="main__main-empty">
+            К сожалению, ничего не найдено!
+        </div>
+    {{/unless}}
+    {{#each search_results.movies}}
+        <div class="main__search-card">
+            <div class="search-card__item-type">Фильм</div>
+            <div class="search-card__left">
+                <div class="search-card__avatar">
+                    <a href="/movie/{{id}}"><img class="search-card__image" src="{{poster}}"></a>
+                </div>
+            </div>
+            <div class="search-card__right">
+                <div class="search-card__title">
+                    <a href="/movie/{{id}}" class="search-card__link">{{title}}</a>
+                </div>
+                <div class="search-card__movie-genres">
+                    {{#each genre}}
+                        <a href="/movies/genre/1/?filter={{this}}" class="movie-genres__genre-link center__info-link">
+                            {{this}}</a>{{#unless @last}}<span>, </span>{{/unless}}
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    {{/each}}
+    {{#each search_results.actors}}
+        <div class="main__search-card">
+            <div class="search-card__item-type">Актер</div>
+            <div class="search-card__left">
+                <div class="search-card__avatar">
+                    <a href="/actor/{{id}}"><img class="search-card__image" src="{{avatar}}"></a>
+                </div>
+            </div>
+            <div class="search-card__right">
+                <div class="search-card__title">
+                    <a href="/actor/{{id}}" class="search-card__link">{{name}}</a>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+    {{#each search_results.users}}
+        <div class="main__search-card">
+            <div class="search-card__item-type">Пользователь</div>
+            <div class="search-card__left">
+                <div class="search-card__avatar">
+                    <a href="/user/{{username}}"><img class="search-card__image" src="{{avatar}}"></a>
+                </div>
+            </div>
+            <div class="search-card__right">
+                <div class="search-card__title">
+                    <a href="/user/{{username}}" class="search-card__link">{{username}}</a>
+                </div>
+            </div>
+        </div>
+    {{/each}}
 </div>

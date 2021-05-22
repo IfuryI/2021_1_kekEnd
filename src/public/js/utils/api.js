@@ -380,6 +380,15 @@ class Api {
     getFeed() {
         return this.asyncRequest(`http://${this.host}:${this.port}/feed`);
     }
+
+    /**
+     * Получить результаты поиска
+     * @param {string} query - поисковой запрос
+     * @return {Promise<{data: *, status: number}>} - промис со статусом запроса и данными
+     */
+    getSearchResults(query) {
+        return this.asyncRequest(`http://${this.host}:${this.port}/search?q=${query}`);
+    }
 }
 
 export const API = new Api();
