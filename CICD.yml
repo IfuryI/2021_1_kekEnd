@@ -1,0 +1,76 @@
+name: Simple Build
+
+on:
+  push:
+    branches: [deploy]
+  pull_request:
+    branches: [deploy]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build result
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: ./build
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download build
+        uses: actions/download-artifact@v1
+        with:
+          name: build
+      - name: Transfer build files to server
+        uses: appleboy/scp-action@v0.0.10
+        with:
+          host: 89.208.198.186
+          username: ubuntu
+          key: -----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEA9WUO6J4JNFPf36189xxtE6MhSNLosm4ujxrPZxL6PN1HH/u3
+v8no1s1kphgzf3yNkBnP2klnJaoYVDcFy/DXPSTM1RFZkSQCEJy33M16oycDT3kI
+KKGzUs3w2+eDVEWzLRoOnEtMoU+6QMxHnNLQG/7AknGSRQgPLqpU9mO83OnHXco+
+HO/Er0/m+Y6jfFaS0YndX22XWRlG6/kpvzAz2o4XVQvsXADh6rowSuVg0Jlk0DgO
+v9aIjHRzLHkJAb6UdVNGZdxJN+MA8V1CXoZKNMpf7fTA8MrxnTow0JxMYx381C5b
+LVn1LAdlIkKP/6/nRWFjbOdppEkR0Ep+gIkrhQIDAQABAoIBAA+UkALC7fCtlpw8
+BqAl5OMHS3i1M2MIzdn2KM7xjIPKxNZKBBugNTFWLxrAlJx2iwJoMSM539urVgoa
+yDpvmyrdqEeq51XoxFzLpnzVawDq3DHyjEsQITOTscQ0ickS99JYQi84NLBVQI0W
+q0FQvTfZz948ab4KSfR7ihNut7IK4fKDGNj2PGPMSjTq1t/lGwOHT647eI5LRPQ+
+vL4aq3lzReFnCbP1NpBW4pkAoqXBtpownQVYZ5bvYn+R5VVTKnnPFUZyLwMEsgHD
+7KsOTLJ52qU+qLiKBSJKsrcQU+IDXyI8w27Hqb+5mkEjlXwnzuGAeIWkcAyBarPE
+HGS+vGECgYEA/MFRsMt0QvBdOEzQ03FUvloGfLIuQrsJHLnFunbRzF2LpzWpES8N
+yTzJe4zhBQ47Qubu30W0z0GJAKCqRMZnUfWhsg2DT7eY7VuExb5PxpzT4MT7iY1l
+AQu23N/c9u2+HlMfcZZbd48GsU8iHUendRjHKjTxBDwfRuHxJVJXEmkCgYEA+IuM
+liyQKDoTmOH045+2CdSUGWYd3+vmvn9+XwzZmb7quyPSJV+Wt59kntjD9vWYQBBX
+E6vBUfk3xYtaTuSAD+2KYjt2+FHbZNRrYPD+2a3U1fbAXt/QpFJG6UXkvlXb1I+1
+C/K4UjcZESwJ1J57jfa/YeD4cgXR3NK8g8OBdL0CgYEAsaGDMcaqfGjEes6xbAgX
+0HcgW/41OLyNmNyOM49Rvlh3zxmNKgBxpd3Mk8HcWls4FrqJYexxN78M8532S8NL
+1XPVIXcRs7KKDTXmR7qKAkExPqPxSyhNtcBv0Saa+gb3OASe8osC2TFxOKcuiHlV
+HJw/TFBMmfdO29fqS5pkixECgYEAxhgjYwX9l7JCMFXXoxyGMGuX5m53XSNd83MW
+O5e4T0vVNnakZVk8fPmzbs+B0PGJ+XWMkYcRO86QXwhkYADK+Obwpr6SYfSMEl8j
+fk5WMRTVT/us83Ebj/xrvD0SxYkU/uPS/sTjl9OGTSN2alouS8XgX5i5K9frnj7w
+NWy7X1kCgYEAtUY0iFYw5bDQw7y4kWOrNPt/L0WDkKo/fLEdWESvkhC+ikBAUmis
+EG8AotjthwJ4DlBTgN9rl+fhFjGieQiF/+nHlBqwg/5PO6YYTnbnCB6ou31B3ko8
+NyQgT7E+CNpXwFfnGYIhVlJjMunDgHxEAQ3rD5u1Jx+7FLLeV6f+SD4=
+-----END RSA PRIVATE KEY-----
+          source: "build/*"
+          target: "/home/ubuntu/frontend/dist"
+          strip_components: 1
