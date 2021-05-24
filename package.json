@@ -4,7 +4,7 @@
   "description": "* [Теняев Олег](https://github.com/grillow)\r * [Афимин Илья](https://github.com/IfuryI)\r * [Бахметьев Глеб](https://github.com/polyanimal)\r * [Зотов Алексей](https://github.com/let-robots-reign)",
   "main": "server.js",
   "scripts": {
-    "build": "NODE_ENV='production' webpack",
+    "build": "npm run scss && npm run gentmpl && NODE_ENV='production' webpack",
     "start": "npm run scss && npm run gentmpl && webpack serve --config webpack.config.js --hot --inline",
     "gentmpl": "./gentmpl.sh",
     "test": "node test/server.js",
