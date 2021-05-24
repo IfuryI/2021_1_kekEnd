@@ -41,13 +41,13 @@ jobs:
       - name: Download build
         uses: actions/download-artifact@v1
         with:
-          name: build
+          name: dist
       - name: Transfer build files to server
         uses: appleboy/scp-action@v0.0.10
         with:
           host: 89.208.198.186
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
-          source: "build/*"
+          source: "dist/*"
           target: "/home/ubuntu/frontend/dist"
           strip_components: 1
