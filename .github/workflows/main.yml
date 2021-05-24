@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Install sass
-        run: sudo apt install sass
+        run: npm install sass
 
       - name: Build
         run: npm run build
